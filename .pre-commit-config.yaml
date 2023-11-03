@@ -38,6 +38,7 @@ repos:
       - id: mypy
         args: [--config-file=mypy.ini]
         language: system
+        exclud: proto/
 
   # pre-commit-hooks is a collection of Git hooks for code quality, formatting, and analysis.
   - repo: https://github.com/pre-commit/pre-commit-hooks

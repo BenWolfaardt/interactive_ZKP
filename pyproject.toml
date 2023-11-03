@@ -1,0 +1,75 @@
+[tool.poetry]
+name = "interview-nillion"
+version = "0.1.0"
+description = ""
+authors = ["Ben Wolfaardt <benjaminwolfaardt@gmail.com>"]
+readme = "README.md"
+packages = [{include = "interview_nillion"}]
+
+[tool.poetry.dependencies]
+python = "^3.11.3"
+
+[tool.poetry.group.dev.dependencies]
+bandit = {version = "1.7.5", extras = ["toml"]}
+black = "23.3.0"
+flake8 = "6.0.0"
+isort = "5.12.0"
+mypy = "1.4.1"
+pre-commit = "3.3.3"
+pre-commit-hooks = "4.4.0"
+pyupgrade = "3.7.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.bandit]
+exclude_dirs = ["*/tests/*"]
+tests = ["B201", "B301"]
+skips = ["B101", "B601"]
+
+[tool.black]
+line-length = 110
+target-version = ['py311']
+
+[tool.isort]
+profile = "black"
+force_single_line = false
+line_length = 110
+lines_after_imports = 2
+lines_between_types = 1
+use_parentheses = true
+src_paths = ["src", "tests"]
+
+[tool.mypy]
+python_version = "3.11"
+
+check_untyped_defs = true
+disallow_untyped_defs = true
+incremental = false
+ignore_errors = false
+pretty = true
+show_error_context = true
+show_traceback = true
+strict_optional = true
+warn_incomplete_stub = true
+warn_no_return = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = []
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+log_cli = 0
+log_cli_level = "INFO"
+log_cli_format = "%(asctime)s [%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
+log_cli_date_format = "%Y-%m-%d %H:%M:%S"
+python_files = ["test_*.py"]
+testpaths = ["tests"]

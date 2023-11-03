@@ -63,6 +63,12 @@ warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
 
+[tool.mypy.exclude]
+files = [
+  "^proto/zkp_auth_pb2_grpc.py$",
+  "^proto/zkp_auth_pb2.py$"
+]
+
 [[tool.mypy.overrides]]
 module = [
     "google.protobuf/*",

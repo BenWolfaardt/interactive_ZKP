@@ -33,22 +33,20 @@ repos:
 
   # mypy checks type annotations.
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.4.1
+    rev: v1.6.1
     hooks:
       - id: mypy
         args: [--config-file=pyproject.toml]
-        exclude: proto/
 
   # pre-commit-hooks is a collection of Git hooks for code quality, formatting, and analysis.
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: check-toml
       - id: end-of-file-fixer
         exclude: ^tests/.*/fixtures/.*
       - id: trailing-whitespace
         exclude: ^proto/zkp_auth.proto$
-
 
   # pyupgrade automatically upgrades Python code for improved compatibility and maintainability.
   - repo: https://github.com/asottile/pyupgrade

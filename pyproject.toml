@@ -49,6 +49,9 @@ python_version = "3.11"
 
 check_untyped_defs = true
 disallow_untyped_defs = true
+exclude = [
+    '^proto/',
+]
 incremental = false
 ignore_errors = false
 pretty = true
@@ -62,12 +65,6 @@ warn_return_any = true
 warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
-
-[tool.mypy.exclude]
-files = [
-  "^proto/zkp_auth_pb2_grpc.py$",
-  "^proto/zkp_auth_pb2.py$"
-]
 
 [[tool.mypy.overrides]]
 module = [

@@ -9,6 +9,9 @@ packages = [{include = "interview_nillion"}]
 [tool.poetry.dependencies]
 python = "^3.11.3"
 
+grpcio = "1.59.2"
+grpcio-tools = "1.59.2"
+
 [tool.poetry.group.dev.dependencies]
 bandit = {version = "1.7.5", extras = ["toml"]}
 black = "23.3.0"

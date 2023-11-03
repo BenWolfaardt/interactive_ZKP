@@ -65,6 +65,7 @@ warn_unused_ignores = true
 
 [[tool.mypy.overrides]]
 module = [
+    "google.protobuf/*",
     "grpc.*",
 ]
 ignore_missing_imports = true

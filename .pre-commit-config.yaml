@@ -36,7 +36,7 @@ repos:
     rev: v1.4.1
     hooks:
       - id: mypy
-        args: [--config-file=pyproject.toml,  --package=src]
+        args: [--config-file=pyproject.toml,  --package=src,  --exclude ^proto/]
         pass_filenames: false
 
   # pre-commit-hooks is a collection of Git hooks for code quality, formatting, and analysis.

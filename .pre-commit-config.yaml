@@ -37,6 +37,7 @@ repos:
     hooks:
       - id: mypy
         args: [--config-file=pyproject.toml]
+        exclude: ^proto/zkp_auth_pb2_grpc.py$|^proto/zkp_auth_pb2.py$
 
   # pre-commit-hooks is a collection of Git hooks for code quality, formatting, and analysis.
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -46,6 +47,8 @@ repos:
       - id: end-of-file-fixer
         exclude: ^tests/.*/fixtures/.*
       - id: trailing-whitespace
+        exclude: ^proto/zkp_auth.proto$
+
 
   # pyupgrade automatically upgrades Python code for improved compatibility and maintainability.
   - repo: https://github.com/asottile/pyupgrade

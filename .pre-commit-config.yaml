@@ -37,6 +37,7 @@ repos:
     hooks:
       - id: mypy
         args: [--config-file=pyproject.toml]
+        pass_filenames: false
 
   # pre-commit-hooks is a collection of Git hooks for code quality, formatting, and analysis.
   - repo: https://github.com/pre-commit/pre-commit-hooks

@@ -44,6 +44,36 @@ lines_between_types = 1
 use_parentheses = true
 src_paths = ["src", "tests"]
 
+[tool.mypy]
+python_version = "3.11"
+
+check_untyped_defs = true
+disallow_untyped_defs = true
+incremental = false
+ignore_errors = false
+pretty = true
+show_error_context = true
+show_traceback = true
+strict_optional = true
+warn_incomplete_stub = true
+warn_no_return = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+warn_unused_ignores = true
+
+exclude = [
+    '^proto/',
+]
+
+[[tool.mypy.overrides]]
+module = [
+    "google.protobuf.*",
+    "grpc.*",
+]
+ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 minversion = "6.0"
 addopts = "-ra -q"

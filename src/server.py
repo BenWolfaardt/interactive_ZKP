@@ -1,7 +1,6 @@
 import logging
 
 from concurrent import futures
-from typing import Any
 
 import grpc
 import proto.zkp_auth_pb2_grpc as zkp_auth_pb2_grpc
@@ -20,14 +19,29 @@ from proto.zkp_auth_pb2 import (
 class AuthServicer(zkp_auth_pb2_grpc.AuthServicer):
     """Provides methods that implement functionality of AuthServicer server."""
 
-    def Register(self, request: RegisterRequest, context: ServicerContext) -> Any:
-        # logging.info("hoyah")
-        # context.
+    def __init__(self) -> None:
+        super().__init__()
+        self.user_data: dict = {}
+
+    def Register(self, request: RegisterRequest, context: ServicerContext) -> RegisterResponse:
+        user = request.user
+
+        if user in self.user_data:
+            e = f"User '{user}' already exists"
+            logging.error(e)
+            context.set_code(grpc.StatusCode.ALREADY_EXISTS)
+            context.set_details(e)
+        else:
+            self.user_data[user] = {
+                "user_name": user,
+            }
+            logging.info(f"{user}, you have succesfully registered")
+
         return RegisterResponse()
 
     def CreateAuthenticationChallenge(
         self, request: AuthenticationChallengeRequest, context: ServicerContext
-    ) -> Any:
+    ) -> AuthenticationChallengeResponse:
         # TODO calculate response
 
         return AuthenticationChallengeResponse(
@@ -35,7 +49,9 @@ class AuthServicer(zkp_auth_pb2_grpc.AuthServicer):
             c=5,  # int64
         )
 
-    def VerifyAuthentication(self, request: AuthenticationAnswerRequest, context: ServicerContext) -> Any:
+    def VerifyAuthentication(
+        self, request: AuthenticationAnswerRequest, context: ServicerContext
+    ) -> AuthenticationAnswerResponse:
         # TODO calculate response
 
         return AuthenticationAnswerResponse(

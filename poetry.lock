@@ -467,6 +467,22 @@ files = [
 ]
 
 [[package]]
+name = "mypy-protobuf"
+version = "3.5.0"
+description = "Generate mypy stub files from protobuf specs"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "mypy-protobuf-3.5.0.tar.gz", hash = "sha256:21f270da0a9792a9dac76b0df463c027e561664ab6973c59be4e4d064dfe67dc"},
+    {file = "mypy_protobuf-3.5.0-py3-none-any.whl", hash = "sha256:0d0548c6b9a6faf14ce1a9ce2831c403a5c1f2a9363e85b1e2c51d5d57aa8393"},
+]
+
+[package.dependencies]
+protobuf = ">=4.23.4"
+types-protobuf = ">=4.23.0.2"
+
+[[package]]
 name = "nodeenv"
 version = "1.8.0"
 description = "Node.js virtual environment builder"
@@ -847,6 +863,18 @@ files = [
 ]
 
 [[package]]
+name = "types-protobuf"
+version = "4.24.0.4"
+description = "Typing stubs for protobuf"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "types-protobuf-4.24.0.4.tar.gz", hash = "sha256:57ab42cb171dfdba2c74bb5b50c250478538cc3c5ed95b8b368929ad0c9f90a5"},
+    {file = "types_protobuf-4.24.0.4-py3-none-any.whl", hash = "sha256:131ab7d0cbc9e444bc89c994141327dcce7bcaeded72b1acb72a94827eb9c7af"},
+]
+
+[[package]]
 name = "typing-extensions"
 version = "4.8.0"
 description = "Backported and Experimental Type Hints for Python 3.8+"
@@ -882,4 +910,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11.3"
-content-hash = "ef71fdf93db1dd6af30bbe996cc429967cc858b7ffba34f0be3725d4fc309e97"
+content-hash = "78f9fa1fcd47e1b98d28d1780f2e3cc5f1e6ea3b20dd947d364ef87a341c999d"

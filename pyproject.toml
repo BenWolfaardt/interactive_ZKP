@@ -11,6 +11,7 @@ python = "^3.11.3"
 
 grpcio = "1.59.2"
 grpcio-tools = "1.59.2"
+mypy-protobuf = "3.5.0"
 
 [tool.poetry.group.dev.dependencies]
 bandit = {version = "1.7.5", extras = ["toml"]}

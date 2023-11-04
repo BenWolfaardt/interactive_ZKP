@@ -64,7 +64,7 @@ warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
 
-exclude = '(^|/)proto/)'
+exclude="proto/"
 
 [[tool.mypy.overrides]]
 module = [

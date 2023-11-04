@@ -1,4 +1,6 @@
 import logging
+import random
+import uuid
 
 from concurrent import futures
 
@@ -19,12 +21,15 @@ from proto.zkp_auth_pb2 import (
 class AuthServicer(zkp_auth_pb2_grpc.AuthServicer):
     """Provides methods that implement functionality of AuthServicer server."""
 
+    # TODO: Consider saving the current user in a self for reference in the program
     def __init__(self) -> None:
         super().__init__()
         self.user_data: dict = {}
 
     def Register(self, request: RegisterRequest, context: ServicerContext) -> RegisterResponse:
-        user = request.user
+        user: str = request.user
+        y1: int = request.y1
+        y2: int = request.y2
 
         if user in self.user_data:
             e = f"User '{user}' already exists"
@@ -34,19 +39,31 @@ class AuthServicer(zkp_auth_pb2_grpc.AuthServicer):
         else:
             self.user_data[user] = {
                 "user_name": user,
+                "y1": y1,
+                "y2": y2,
             }
-            logging.info(f"{user}, you have succesfully registered")
+            logging.debug(f"{user=} has registered with {y1=} and {y2=}")
 
         return RegisterResponse()
 
     def CreateAuthenticationChallenge(
         self, request: AuthenticationChallengeRequest, context: ServicerContext
     ) -> AuthenticationChallengeResponse:
-        # TODO calculate response
+        c: int = random.randint(0, 1_000_000)
+        auth_id: uuid.UUID = uuid.uuid4()
+        user: str = request.user
+        r1: int = request.r1
+        r2: int = request.r2
+
+        self.user_data[user] = {
+            "r1": r1,
+            "r2": r2,
+        }
+        logging.debug(f"{user=} has parsed {r1=} and {r2=}")
 
         return AuthenticationChallengeResponse(
-            auth_id="string",  # string
-            c=5,  # int64
+            auth_id=str(auth_id),
+            c=c,
         )
 
     def VerifyAuthentication(

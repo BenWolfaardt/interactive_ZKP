@@ -64,10 +64,6 @@ warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
 
-exclude = '''
-    ^proto/zkp_auth_pb2_grpc\.py$
-'''
-
 [[tool.mypy.overrides]]
 module = [
     "google.*",

@@ -12,6 +12,7 @@ python = "^3.11.3"
 grpcio = "1.59.2"
 grpcio-tools = "1.59.2"
 mypy-protobuf = "3.5.0"
+envyaml = "1.10.211231"
 
 [tool.poetry.group.dev.dependencies]
 bandit = {version = "1.7.5", extras = ["toml"]}
@@ -66,6 +67,7 @@ warn_unused_ignores = true
 
 [[tool.mypy.overrides]]
 module = [
+    "envyaml.*",
     "google.*",
     "google.protobuf.*",
     "grpc.*",

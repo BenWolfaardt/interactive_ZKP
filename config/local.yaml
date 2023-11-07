@@ -1,0 +1,12 @@
+public_variables:
+  p: ${PUBLIC_P}
+  g: ${PUBLIC_G}
+  h: ${PUBLIC_H}
+
+implementaion:
+  flavour: "exponentiations"
+  bits: 512
+  use_preconfigured_env: true
+
+logging:
+  level: "debug"

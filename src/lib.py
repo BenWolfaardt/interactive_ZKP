@@ -1,3 +1,4 @@
+import math
 import random
 
 
@@ -29,9 +30,13 @@ Security parameter choices: Parameters related to the security of the protocol, 
 Challenge and response format: The prover and verifier need to know how challenges and responses are formatted in the protocol, including the range or format of challenges, how they are generated, and how responses are computed and transmitted.
 """
 
+bits: int = 32
 
-class PrimeGenerator:
-    def is_prime(self, n: int, k: int = 5) -> bool:
+
+class PublicVariableGenerator:
+    # k selected as per page 188
+    # TODO go through the algorithm and compare to book
+    def _is_prime(self, n: int, k: int = 20) -> bool:
         if n <= 1:
             return False
         if n <= 3:
@@ -43,7 +48,12 @@ class PrimeGenerator:
             r += 1
             d //= 2
 
+        # TODO see:
+        #   - https://web.archive.org/web/20130328080230/http://en.literateprograms.org/Miller-Rabin_primality_test_%28Python%29
+        #   - https://stackoverflow.com/questions/15347174/python-finding-prime-factors
         # Miller-Rabin primality test
+        #   used to test if something is prime with high confidence
+        #   pg. 188 in Cryptography: An Introduction
         for _ in range(k):
             a = random.randint(2, n - 2)
             x = pow(a, d, n)
@@ -59,40 +69,75 @@ class PrimeGenerator:
 
         return True
 
-    def find_prime(self, bits: int) -> int:
+    def _get_prime(self, bits: int) -> int:
         while True:
             candidate = random.getrandbits(bits)
             if candidate % 2 == 0:
                 candidate += 1
-            if self.is_prime(candidate):
+            if self._is_prime(candidate):
                 return candidate
 
+    # This approach was formulated primarily on Cryptography: An Introduction (3rd Edition) by Nigel Smart.
+    class Approach1:
+        def __init__(self, PublicVariableGenerator: "PublicVariableGenerator") -> None:
+            self.q: int = PublicVariableGenerator._get_prime(bits)
 
-class ChaumPedersenProtocol:
-    def __init__(self, g: int, h: int, p: int, x: int) -> None:
-        self.g = g
-        self.h = h
-        self.p = p
-        self.x = x
+        # Euler's totient
+        #   also known as Euler's totient
+        #   used to test for primitive roots
+        #   pg. 5 in Cryptography: An Introduction
+        def _eulers_phi_function(self, n: int) -> int:
+            result = n
+            for p in range(2, int(math.sqrt(n)) + 1):
+                if n % p == 0:
+                    while n % p == 0:
+                        n //= p
+                    result -= result // n
+            if n > 1:
+                result -= result // n
+            return result
 
-    def compute_y_values(self) -> tuple[int, int]:
-        y1 = pow(self.g, self.x, self.p)
-        y2 = pow(self.h, self.x, self.p)
-        return y1, y2
+        def _find_coprime(self, n: int) -> int:
+            while True:
+                candidate = random.randint(2, n - 1)
+                if math.gcd(candidate, n) == 1:
+                    return candidate
+
+        def get_public_variables(self) -> tuple[int, int, int]:
+            q = self.q
+            g = self._find_coprime(q)
+            while True:
+                h = self._find_coprime(q)
+                if h != g:
+                    break
+
+            return q, g, h
+
+    # Whilst grappling with this challenge I came across another approach which I my curiosity wanted to investigate.
+    class Approach2:
+        def __init__(self, PublicVariableGenerator: "PublicVariableGenerator") -> None:
+            # TODO set bits in yaml
+            self.p: int = PublicVariableGenerator._get_prime(bits)
+            self.q: int = 2 * self.p + 1  # But needs to also be a prime
+
+            # This is the a, b, ab approach
+
+        # def get_public_variables(self) -> tuple[int, int, int]:
+        #     pass
+        #     q = self.q
+        #     g = self.g
+        #     h = self.h
+
+        #     return q, g, h
 
 
 if __name__ == "__main__":
-    tg = PrimeGenerator()
-    prime = tg.find_prime(256)
-    print(prime)
+    generator = PublicVariableGenerator()
 
-    # generate_initalisation_variables = PrimeGenerator()
-    # g = generate_initalisation_variables.g
-    # h = generate_initalisation_variables.h
-    # p = generate_initalisation_variables.p
-    # print(f"{g=}, {h=}, {p=}")
+    approach_1 = generator.Approach1(generator)
+    q, g, h = approach_1.get_public_variables()
+    print(f"Approach 1: {q=}, {g=}, {h=}\n")
 
-    # x = 123456
-
-    # protocol = ChaumPedersenProtocol(g, h, p, x)
-    # y1, y2 = protocol.compute_y_values()
+    approach_2 = generator.Approach2(generator)
+    # q, g, h = approach_2.get_public_variables()
+    # print(f"Approach 2: {q=}, {g=}, {h=}")

@@ -4,6 +4,7 @@
 
 # Python Related
 __pycache__/
+.mypy_cache
 
 # VSCode
 .vscode

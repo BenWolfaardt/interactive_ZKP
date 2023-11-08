@@ -1,11 +1,12 @@
 public_variables:
-  q: 7483155476249600639
-  g: 1249883180198540740
-  h: 6864519337465959175
+  p: 3755596804371315599
+  q: 1877798402185657799
+  g: 1891374716607036356
+  h: 1773229570835484706
 
 implementaion:
   flavour: "exponentiations"
-  bits: 64  # Max 64 due to our protobuf constraints
+  bits: 63  # Max 63 due to our protobuf constraints being int64 and because they're signed we need to minus 1
 
 logging:
   level: "debug"

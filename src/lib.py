@@ -52,30 +52,32 @@ class PublicVariableGenerator:
             if self._is_prime(candidate):
                 return candidate
 
-    def get_safe_prime(self, bits: int) -> tuple[int, int]:
+    def _get_safe_prime(self, bits: int) -> tuple[int, int]:
         while True:
             q = self._get_prime(bits - 1)  # Get a prime of bits-1 to ensure p has 'bits' bits
             p = 2 * q + 1
             if self._is_prime(p):
                 return p, q
 
+    def _find_generator(self, p: int, q: int) -> int:
+        while True:
+            candidate = random.randint(2, p - 2)
+            # g^2 mod p should not be 1, and g^q mod p should be 1
+            if pow(candidate, 2, p) != 1 and pow(candidate, q, p) == 1:
+                return candidate
+
     # This approach was formulated primarily on Cryptography: An Introduction (3rd Edition) by Nigel Smart.
     class Approach1:
         def __init__(self, generator: "PublicVariableGenerator") -> None:
-            self.p, self.q = generator.get_safe_prime(generator.get_bits())
-
-        def _find_coprime(self, n: int) -> int:
-            while True:
-                candidate = random.randint(2, n - 1)
-                if math.gcd(candidate, n) == 1:
-                    return candidate
+            self.p, self.q = generator._get_safe_prime(generator.get_bits())
 
         def get_public_variables(self) -> tuple[int, int, int, int]:
             p = self.p
             q = self.q
-            g = self._find_coprime(q)
+            g = generator._find_generator(p, q)
+            h = g
             while True:
-                h = self._find_coprime(q)
+                h = generator._find_generator(p, q)
                 if h != g:
                     break
 

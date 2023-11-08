@@ -40,11 +40,11 @@ class AuthServicer(zkp_auth_pb2_grpc.AuthServicer):
 
         if AuthServicer.settings:
             # public variables
+            self.p = AuthServicer.settings.p
             self.q = AuthServicer.settings.q
             self.g = AuthServicer.settings.g
             self.h = AuthServicer.settings.h
             self.bits = AuthServicer.settings.bits
-            self.default_values = AuthServicer.settings.default_values
             self.log_level = AuthServicer.settings.log_level
 
     @property
@@ -81,10 +81,7 @@ class AuthServicer(zkp_auth_pb2_grpc.AuthServicer):
         user: str = request.user
         r1: int = request.r1
         r2: int = request.r2
-
-        # c: int = random.randint(1, q - 1)
-        # TODO get the value from yaml and divide by x to increase probability of it being correct
-        c: int = random.randint(1, 2 ^ 16)
+        c: int = random.randint(1, self.q - 1)
 
         self.user_data[user]["c"] = c
         self.user_data[user]["r1"] = r1
@@ -107,8 +104,8 @@ class AuthServicer(zkp_auth_pb2_grpc.AuthServicer):
         r1_original: int = self.user_data[self.user]["r1"]
         r2_original: int = self.user_data[self.user]["r2"]
 
-        r1_new = (pow(self.g, s, self.q) * pow(y1, c, self.q)) % self.q
-        r2_new = (pow(self.h, s, self.q) * pow(y2, c, self.q)) % self.q
+        r1_new = (pow(self.g, s, self.p) * pow(y1, c, self.p)) % self.p
+        r2_new = (pow(self.h, s, self.p) * pow(y2, c, self.p)) % self.p
 
         # TODO: add am expiration
         # TODO: reset the auth_id as it's been used

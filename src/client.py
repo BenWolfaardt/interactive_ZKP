@@ -3,6 +3,7 @@ import random
 import sys
 
 from collections import defaultdict
+from time import sleep
 
 import grpc
 
@@ -20,20 +21,17 @@ from src.settings import Settings, load_settings, log_level_mapping
 
 class Client:
     def __init__(self) -> None:
+        # service config
         self.settings: Settings | None = None
         self._logger: logging.Logger | None = None
-
+        # public variables
         self.q: int = 0
         self.g: int = 0
         self.h: int = 0
         self.bits: int = 0
-        # self.q: int | None = None
-        # self.g: int | None = None
-        # self.h: int | None = None
-        # self.bits: int | None = None
         self.default_values = True
         self.log_level: str = "info"
-
+        # user session details
         self.user: str | None = None
         self.user_data: dict = defaultdict(set)
 
@@ -57,7 +55,7 @@ class Client:
 
     # TODO: data validation with pydantic?
     def Register(self, stub: AuthStub) -> None:
-        # self.user = input("Enter your username: ")
+        self.user = input("Enter your username: ")
 
         # while True:
         #     try:
@@ -66,23 +64,17 @@ class Client:
         #     except ValueError:
         #         self.logger.error(f"{self.user} your password must be an integer.")
 
-        self.user = "Bob"
+        # self.user = "Bob"
         x = 3
 
         y1: int = pow(self.g, x, self.q)
         y2: int = pow(self.h, x, self.q)
 
-        # TODO probably get rid of this try except
-        try:
-            request = RegisterRequest(
-                user=self.user,
-                y1=y1,
-                y2=y2,
-            )
-        # TODO: if we know the limits on this error we can implement it at the stdin part
-        except ValueError as e:
-            self.logger.exception(f"ValueError: {e}")
-            sys.exit()
+        request = RegisterRequest(
+            user=self.user,
+            y1=y1,
+            y2=y2,
+        )
 
         try:
             stub.Register(request)
@@ -92,7 +84,7 @@ class Client:
                 self.logger.error(f"{rpc_error.details()}")
             else:
                 self.logger.exception(f"Caught a gRPC error: {rpc_error}")
-            sys.exit()
+                sys.exit()
         except Exception as e:
             self.logger.exception(f"Caught an exception: {e}")
             sys.exit()
@@ -113,6 +105,7 @@ class Client:
         Independence: 'k' should be independently and uniformly randomly chosen for each commitment. This means that each time the prover generates a commitment, it selects a new, unrelated value for 'k'. This independence prevents the verifier from deducing any information about 'k' or 'x' from multiple commitments.
         """
         # TODO: k needs to be unique, if it is the same, then they can determine our x
+        # TODO: hash k to ensure it is a x bit number and big.
         k: int = random.randint(1, self.q - 1)
         r1: int = pow(self.g, k, self.q)
         r2: int = pow(self.h, k, self.q)
@@ -158,16 +151,44 @@ class Client:
             self.logger.exception(f"Caught an exception: {e}")
             sys.exit()
 
-    def run(self) -> None:
-        with grpc.insecure_channel("server:50051") as channel:
-            stub: AuthStub = AuthStub(channel)
-            self.Register(stub)
-            authentication_challenge_response = self.CreateAuthenticationChallenge(stub)
-            self.VerifyAuthentication(stub, authentication_challenge_response)
+
+def main() -> None:
+    action = None
+    mode = None
+
+    while mode not in ["local", "docker"]:
+        mode = input(
+            "Are you running the app in 'local' mode or 'docker' mode? Please enter your desired mode ('local' or 'docker'):\n"
+        )
+
+    if mode == "docker":
+        host = "server"
+    else:
+        host = "localhost"
+
+    while True:
+        while action not in ["register", "login", "exit"]:
+            action = input("Please choose your desired action ('register', 'login' or 'exit'):\n")
+
+        if action == "register":
+            with grpc.insecure_channel(f"{host}:50051") as channel:
+                stub: AuthStub = AuthStub(channel)
+                c.Register(stub)
+        elif action == "login":
+            # TODO update so that it knows what user we are using
+            with grpc.insecure_channel(f"{host}:50051") as channel:
+                stub = AuthStub(channel)
+                authentication_challenge_response = c.CreateAuthenticationChallenge(stub)
+                c.VerifyAuthentication(stub, authentication_challenge_response)
+        elif action == "exit":
+            sys.exit(1)
+
+        action = None
+        sleep(1)
 
 
 if __name__ == "__main__":
     logging.basicConfig()
     c = Client()
     c.set_variables()
-    c.run()
+    main()

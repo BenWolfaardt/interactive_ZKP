@@ -22,8 +22,10 @@ from src.settings import Settings, load_settings, log_level_mapping
 
 
 class AuthServicer(zkp_auth_pb2_grpc.AuthServicer):
+    # service config
     _logger: logging.Logger | None = None
     settings: Settings | None = None
+    # user session details
     user: str | None = None
     user_data: dict = defaultdict(set)
 
@@ -37,6 +39,7 @@ class AuthServicer(zkp_auth_pb2_grpc.AuthServicer):
             AuthServicer.set_variables()
 
         if AuthServicer.settings:
+            # public variables
             self.q = AuthServicer.settings.q
             self.g = AuthServicer.settings.g
             self.h = AuthServicer.settings.h
@@ -80,7 +83,7 @@ class AuthServicer(zkp_auth_pb2_grpc.AuthServicer):
         r2: int = request.r2
 
         # c: int = random.randint(1, q - 1)
-        # TODO get the value from yaml and divide by x
+        # TODO get the value from yaml and divide by x to increase probability of it being correct
         c: int = random.randint(1, 2 ^ 16)
 
         self.user_data[user]["c"] = c

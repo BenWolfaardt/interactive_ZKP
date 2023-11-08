@@ -2,7 +2,7 @@
 name = "interview-nillion"
 version = "0.1.0"
 description = ""
-authors = ["Ben Wolfaardt <benjaminwolfaardt@gmail.com>"]
+authors = ["Ben Wolfaardt <dm@benwolfaardt.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]

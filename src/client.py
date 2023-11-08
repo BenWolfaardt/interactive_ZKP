@@ -1,3 +1,4 @@
+import argparse
 import logging
 import random
 import sys
@@ -154,16 +155,15 @@ class Client:
 
 def main() -> None:
     action = None
-    mode = None
 
-    while mode not in ["local", "docker"]:
-        mode = input(
-            "Are you running the app in 'local' mode or 'docker' mode? Please enter your desired mode ('local' or 'docker'):\n"
-        )
+    parser = argparse.ArgumentParser(description="Client for Chaum-Pederson Zero-Knowledge Proof")
+    parser.add_argument("mode", choices=["local", "docker"], help="Choose 'local' or 'docker'")
 
-    if mode == "docker":
+    args = parser.parse_args()
+
+    if args.mode == "docker":
         host = "server"
-    else:
+    elif args.mode == "local":
         host = "localhost"
 
     while True:

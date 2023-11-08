@@ -27,7 +27,7 @@ class Settings(BaseModel):
     g: int
     h: int
     bits: int
-    flavour: str
+    flavour: Flavour
     log_level: str
 
     def __init__(self, **data: Any):

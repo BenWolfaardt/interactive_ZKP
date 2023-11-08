@@ -159,7 +159,7 @@ class Client:
             sys.exit()
 
     def run(self) -> None:
-        with grpc.insecure_channel("localhost:50051") as channel:
+        with grpc.insecure_channel("server:50051") as channel:
             stub: AuthStub = AuthStub(channel)
             self.Register(stub)
             authentication_challenge_response = self.CreateAuthenticationChallenge(stub)

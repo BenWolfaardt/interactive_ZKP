@@ -1,27 +1,40 @@
 version: '3.9'
 
 services:
-  app:
+  client:
     build:
       context: .
-      dockerfile: ci/Dockerfile
-    container_name: app
+      dockerfile: ci/client/Dockerfile
+    environment:
+      PYTHONPATH: /app/src
+    container_name: client
     restart: on-failure
     healthcheck:
       test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
       interval: 1s
       timeout: 5s
       retries: 10
-    # depends_on:
-    # volumes:
-    #   - :
-    ports:
-      # - ":"
+    depends_on:
+      - server
+    networks:
+      - network
+
+  server:
+    build:
+      context: .
+      dockerfile: ci/server/Dockerfile
+    environment:
+      PYTHONPATH: /app/src
+    container_name: server
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
     networks:
       - network
 
 networks:
-  network: # this network
+  network:
     driver: bridge
-
-volumes:

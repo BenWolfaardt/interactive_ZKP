@@ -1,12 +1,11 @@
 public_variables:
-  p: 50587
-  g: 2
-  h: 3
+  q: 7483155476249600639
+  g: 1249883180198540740
+  h: 6864519337465959175
 
 implementaion:
   flavour: "exponentiations"
-  bits: 512
-  use_preconfigured_env: true
+  bits: 64  # Max 64 due to our protobuf constraints
 
 logging:
   level: "debug"

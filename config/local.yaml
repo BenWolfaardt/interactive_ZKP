@@ -4,7 +4,7 @@ public_variables:
   g: 1891374716607036356
   h: 1773229570835484706
 
-implementaion:
+implementation:
   flavour: "exponentiations"
   bits: 63  # Max 63 due to our protobuf constraints being int64 and because they're signed we need to minus 1
 

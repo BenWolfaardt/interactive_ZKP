@@ -28,6 +28,7 @@ class Settings:
     def __init__(self, yaml_config: EnvYAML) -> None:
         self.config = yaml_config
         # TODO some checking on input data
+        self.p: int = self.config["public_variables"]["p"]
         self.q: int = self.config["public_variables"]["q"]
         self.g: int = self.config["public_variables"]["g"]
         self.h: int = self.config["public_variables"]["h"]
@@ -38,6 +39,7 @@ class Settings:
 
 if __name__ == "__main__":
     settings = load_settings()
+    print(f"{settings.p=}")
     print(f"{settings.q=}")
     print(f"{settings.g=}")
     print(f"{settings.h=}")

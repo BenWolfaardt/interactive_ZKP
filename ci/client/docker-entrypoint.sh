@@ -1,2 +1,4 @@
 #!/bin/bash
-python -m src.client
+
+echo "Client container is ready."
+tail -f /dev/null  # Keep the container running

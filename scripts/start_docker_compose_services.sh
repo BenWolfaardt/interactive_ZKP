@@ -2,5 +2,10 @@
 
 export PYTHONPATH='src':$PYTHONPATH
 
-python -m src.client
-python -m src.server
+docker compose down
+docker compose up -d
+sleep 1
+
+docker exec -it client python -m src.client
+
+docker compose down

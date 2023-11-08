@@ -8,7 +8,6 @@ COPY pyproject.toml /app
 COPY README.md /app
 
 WORKDIR /app
-# ENV PYTHONPATH=${PYTHONPATH}:${PWD}
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \

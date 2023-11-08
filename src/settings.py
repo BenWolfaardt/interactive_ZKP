@@ -48,12 +48,18 @@ class Settings(BaseModel):
     def check_value_size(cls, value: int) -> int:
         if value >= (1 << 63):
             raise ValueError("The value must be smaller than 63 or less for signed 64-bit compatibility.")
+        elif value <= 0:
+            raise ValueError(
+                "The value must be bigger than 1 and smaller than 64 due to signed 64-bit compatibility."
+            )
         return value
 
     @field_validator("bits")
     def check_bits_range(cls, value: int) -> int:
         if value > 63:
             raise ValueError("Bits must be 63 or less for signed 64-bit compatibility.")
+        elif value <= 0:
+            raise ValueError("Bits must be bigger than 0, but less than 63 for signed 64-bit compatibility.")
         return value
 
 

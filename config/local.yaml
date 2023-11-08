@@ -1,7 +1,7 @@
 public_variables:
-  p: ${PUBLIC_P}
-  g: ${PUBLIC_G}
-  h: ${PUBLIC_H}
+  p: 50587
+  g: 2
+  h: 3
 
 implementaion:
   flavour: "exponentiations"

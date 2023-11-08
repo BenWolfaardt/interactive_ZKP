@@ -12,7 +12,6 @@ grpcio = "1.59.2"
 grpcio-tools = "1.59.2"
 mypy-protobuf = "3.5.0"
 envyaml = "1.10.211231"
-argparse = "1.4.0"
 
 [tool.poetry.group.dev.dependencies]
 bandit = {version = "1.7.5", extras = ["toml"]}

@@ -16,7 +16,7 @@ from proto.zkp_auth_pb2 import (
 )
 from proto.zkp_auth_pb2_grpc import AuthStub
 
-from src.settings import Settings, load_settings, log_level_mapping
+from src.settings import Settings, log_level_mapping, zkp_settings
 
 
 class Client:
@@ -35,15 +35,13 @@ class Client:
         self.user_data: dict = defaultdict(set)
 
     def set_variables(self) -> None:
-        self.settings = load_settings()
-
-        if self.settings:
-            self.p = self.settings.p
-            self.q = self.settings.q
-            self.g = self.settings.g
-            self.h = self.settings.h
-            self.bits = self.settings.bits
-            self.log_level = self.settings.log_level
+        self.settings = zkp_settings
+        self.p = self.settings.p
+        self.q = self.settings.q
+        self.g = self.settings.g
+        self.h = self.settings.h
+        self.bits = self.settings.bits
+        self.log_level = self.settings.log_level
 
     @property
     def logger(self) -> logging.Logger:

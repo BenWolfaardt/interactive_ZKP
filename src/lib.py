@@ -1,13 +1,12 @@
 import math
 import random
 
-from src.settings import load_settings
+from src.settings import zkp_settings
 
 
 class PublicVariableGenerator:
     def get_bits(self) -> int:
-        settings = load_settings()
-        return settings.bits
+        return zkp_settings.bits
 
     # k selected as per page 188
     # TODO go through the algorithm and compare to book

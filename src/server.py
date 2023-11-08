@@ -18,7 +18,7 @@ from proto.zkp_auth_pb2 import (
     RegisterResponse,
 )
 
-from src.settings import Settings, load_settings, log_level_mapping
+from src.settings import Settings, log_level_mapping, zkp_settings
 
 
 class AuthServicer(zkp_auth_pb2_grpc.AuthServicer):
@@ -32,7 +32,7 @@ class AuthServicer(zkp_auth_pb2_grpc.AuthServicer):
     @classmethod
     def set_variables(cls) -> None:
         if cls.settings is None:
-            cls.settings = load_settings()
+            cls.settings = zkp_settings
 
     def __init__(self) -> None:
         if AuthServicer.settings is None:

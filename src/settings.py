@@ -1,8 +1,10 @@
 import logging
 
 from enum import Enum
+from typing import Any
 
 from envyaml import EnvYAML
+from pydantic import BaseModel, field_validator
 
 
 class Flavour(str, Enum):
@@ -19,30 +21,49 @@ log_level_mapping = {
 }
 
 
-def load_settings() -> "Settings":
-    yaml_config = EnvYAML("./config/local.yaml", strict=False)
-    return Settings(yaml_config)
+class Settings(BaseModel):
+    p: int
+    q: int
+    g: int
+    h: int
+    bits: int
+    flavour: str
+    log_level: str
+
+    def __init__(self, **data: Any):
+        yaml_config = EnvYAML("./config/local.yaml", strict=False)
+
+        super().__init__(
+            p=yaml_config["public_variables"]["p"],
+            q=yaml_config["public_variables"]["q"],
+            g=yaml_config["public_variables"]["g"],
+            h=yaml_config["public_variables"]["h"],
+            flavour=yaml_config["implementation"]["flavour"],
+            bits=yaml_config["implementation"]["bits"],
+            log_level=yaml_config["logging"]["level"],
+            **data,
+        )
+
+    @field_validator("p", "q", "g", "h")
+    def check_value_size(cls, value: int) -> int:
+        if value >= (1 << 63):
+            raise ValueError("The value must be smaller than 63 or less for signed 64-bit compatibility.")
+        return value
+
+    @field_validator("bits")
+    def check_bits_range(cls, value: int) -> int:
+        if value > 63:
+            raise ValueError("Bits must be 63 or less for signed 64-bit compatibility.")
+        return value
 
 
-class Settings:
-    def __init__(self, yaml_config: EnvYAML) -> None:
-        self.config = yaml_config
-        # TODO some checking on input data
-        self.p: int = self.config["public_variables"]["p"]
-        self.q: int = self.config["public_variables"]["q"]
-        self.g: int = self.config["public_variables"]["g"]
-        self.h: int = self.config["public_variables"]["h"]
-        self.flavour: Flavour = self.config["implementaion"]["flavour"]
-        self.bits: int = self.config["implementaion"]["bits"]
-        self.log_level: str = self.config["logging"]["level"]
-
+zkp_settings = Settings()
 
 if __name__ == "__main__":
-    settings = load_settings()
-    print(f"{settings.p=}")
-    print(f"{settings.q=}")
-    print(f"{settings.g=}")
-    print(f"{settings.h=}")
-    print(f"{settings.flavour=}")
-    print(f"{settings.bits=}")
-    print(f"{settings.log_level=}")
+    print(f"{zkp_settings.p=}")
+    print(f"{zkp_settings.q=}")
+    print(f"{zkp_settings.g=}")
+    print(f"{zkp_settings.h=}")
+    print(f"{zkp_settings.flavour=}")
+    print(f"{zkp_settings.bits=}")
+    print(f"{zkp_settings.log_level=}")

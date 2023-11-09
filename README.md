@@ -47,7 +47,8 @@ Now that what needs to be done is understood an overview of the solution will be
   - Configuration and Validation:
     - The YAML configuration file sets initial variables and is validated by `settings.py` to adhere to the required number of bits.
   - Mathematical Library (`lib.py`):
-    - Two approaches are implemented for generating cryptographic values ( _g_, _h_, _p_, _q_ ), based on the bits specified in the YAML config.
+    - Approach 1 is used to generate cryptographic values ( _g_, _h_, _p_, _q_ ), based on the bits specified in the YAML config.
+    - Approach 2 was my curiosity going down a rabbit hole...
     - This script operates independently and outputs values that can be manually entered into the YAML config.
   - Client-Server Interaction:
     - The `server.py` and `client.py` manage the gRPC-based communication.

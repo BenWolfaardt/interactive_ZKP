@@ -2,7 +2,7 @@
 
 This project serves as a practical demonstration of the Chaum-Pedersen Zero-Knowledge Proof protocol. It showcases an interactive model where the **prover** (represented by the client) and the **verifier** (embodied by the server) engage in a sequence of communications to validate claims without revealing underlying secrets. The exchange between the prover and verifier is facilitated through `gRPC`, enabling efficient and structured data transmission for the verification process.
 
-## Table of contenet
+## Table of Contenet
 
 - Introduction
 - Approach
@@ -15,9 +15,9 @@ This project serves as a practical demonstration of the Chaum-Pedersen Zero-Know
   - Development
     - `pre-commit`
     - `protobuf`
-- Deploy to `AWS`
-  - Simple Approach
-  - Complex Approach
+- Deployment to `AWS`: Strategy and Steps
+  - Simple AWS-Native Approach
+  - Complex, Flexible Approach
 - Future Considerations
 - Diving Deeper
 - Nuances

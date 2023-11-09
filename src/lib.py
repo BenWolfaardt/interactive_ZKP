@@ -68,15 +68,16 @@ class PublicVariableGenerator:
     # This approach was formulated primarily on Cryptography: An Introduction (3rd Edition) by Nigel Smart.
     class Approach1:
         def __init__(self, generator: "PublicVariableGenerator") -> None:
-            self.p, self.q = generator._get_safe_prime(generator.get_bits())
+            self.generator = generator
+            self.p, self.q = self.generator._get_safe_prime(self.generator.get_bits())
 
         def get_public_variables(self) -> tuple[int, int, int, int]:
             p = self.p
             q = self.q
-            g = generator._find_generator(p, q)
+            g = self.generator._find_generator(p, q)
             h = g
             while True:
-                h = generator._find_generator(p, q)
+                h = self.generator._find_generator(p, q)
                 if h != g:
                     break
 

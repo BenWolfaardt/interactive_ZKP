@@ -44,6 +44,7 @@ class AuthServicer(zkp_auth_pb2_grpc.AuthServicer):
             self.q = AuthServicer.settings.q
             self.g = AuthServicer.settings.g
             self.h = AuthServicer.settings.h
+            self.flavour = AuthServicer.settings.flavour
             self.bits = AuthServicer.settings.bits
             self.log_level = AuthServicer.settings.log_level
 
@@ -82,7 +83,10 @@ class AuthServicer(zkp_auth_pb2_grpc.AuthServicer):
         r1: int = request.r1
         r2: int = request.r2
         c: int = random.randint(1, self.q - 1)
+        self.logger.debug(f"The random challenge {c=}")
 
+        if user not in self.user_data:
+            self.user_data[user] = {}
         self.user_data[user]["c"] = c
         self.user_data[user]["r1"] = r1
         self.user_data[user]["r2"] = r2
@@ -121,16 +125,17 @@ class AuthServicer(zkp_auth_pb2_grpc.AuthServicer):
             context.set_details(e)
             return AuthenticationAnswerResponse()
 
-    def serve(self) -> None:
-        server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-        zkp_auth_pb2_grpc.add_AuthServicer_to_server(AuthServicer(), server)
-        server.add_insecure_port("[::]:50051")
-        server.start()
-        server.wait_for_termination()
+
+def main() -> None:
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    zkp_auth_pb2_grpc.add_AuthServicer_to_server(AuthServicer(), server)
+    server.add_insecure_port("[::]:50051")
+    server.start()
+    server.wait_for_termination()
 
 
 if __name__ == "__main__":
     logging.basicConfig()
     AuthServicer.set_variables()
     s = AuthServicer()
-    s.serve()
+    main()

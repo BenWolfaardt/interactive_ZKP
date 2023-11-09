@@ -16,7 +16,7 @@ from proto.zkp_auth_pb2 import (
 )
 from proto.zkp_auth_pb2_grpc import AuthStub
 
-from src.settings import Settings, log_level_mapping, zkp_settings
+from src.settings import Flavour, Settings, log_level_mapping, zkp_settings
 
 
 class Client:
@@ -28,6 +28,7 @@ class Client:
         self.q: int = 0
         self.g: int = 0
         self.h: int = 0
+        self.flavour: Flavour = Flavour.EXPONENTIATIONS
         self.bits: int = 0
         self.log_level: str = "info"
         # user session details
@@ -40,6 +41,7 @@ class Client:
         self.q = self.settings.q
         self.g = self.settings.g
         self.h = self.settings.h
+        self.flavour = self.settings.flavour
         self.bits = self.settings.bits
         self.log_level = self.settings.log_level
 
@@ -54,15 +56,15 @@ class Client:
     def Register(self, stub: AuthStub) -> None:
         self.user = input("Enter your username: ")
 
-        # while True:
-        #     try:
-        #         x = int(input("Enter your secret password (an integer): "))
-        #         break
-        #     except ValueError:
-        #         self.logger.error(f"{self.user} your password must be an integer.")
+        while True:
+            try:
+                x = int(input("Enter your secret password (an integer): "))
+                break
+            except ValueError:
+                self.logger.error(f"{self.user} your password must be an integer.")
 
         # self.user = "Bob"
-        x = 123456789
+        # x = 123456789
 
         y1: int = pow(self.g, x, self.p)
         y2: int = pow(self.h, x, self.p)
@@ -96,6 +98,7 @@ class Client:
             user: str = self.user
 
         k: int = random.randint(1, self.q - 1)
+        self.logger.debug(f"The random {k=}")
         r1: int = pow(self.g, k, self.p)
         r2: int = pow(self.h, k, self.p)
 
@@ -105,6 +108,9 @@ class Client:
             r2=r2,
         )
 
+        # TODO should this be done elsewhere?
+        if self.user not in self.user_data:
+            self.user_data[self.user] = {}
         self.user_data[self.user]["k"] = k
 
         self.logger.debug(f"The authentication challenge variables for {user} are: {k=}, {r1=}, {r2=}")
@@ -120,6 +126,7 @@ class Client:
         x: int = self.user_data[self.user]["x"]
 
         s: int = (k - c * x) % self.q
+        self.logger.debug(f"The computed {s=}")
 
         request = AuthenticationAnswerRequest(
             auth_id=auth_id,

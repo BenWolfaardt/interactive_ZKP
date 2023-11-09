@@ -23,7 +23,7 @@ from src.settings import Flavour, Settings, log_level_mapping, zkp_settings
 class ClientUserData(BaseModel):
     user_name: str
     x: int
-    k: int
+    k: int = 0
 
 
 class Client:

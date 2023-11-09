@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 from envyaml import EnvYAML
 from proto.zkp_auth_pb2 import AuthenticationChallengeResponse
 
-from client import Client  # type: ignore[import-not-found]
+from client import Client, ClientUserData
 
 
 class TestClient(unittest.TestCase):
@@ -79,7 +79,9 @@ class TestClient(unittest.TestCase):
         mock_stub_class.return_value = mock_stub_instance
 
         self.client.user = "testuser"
-        self.client.user_data[self.client.user] = {}
+        self.client.user_data[self.client.user] = ClientUserData(
+            user_name=self.client.user, k=mock_randint.return_value, x=123
+        )
         self.client.p = 23
         self.client.q = 29
         self.client.g = 2
@@ -89,15 +91,17 @@ class TestClient(unittest.TestCase):
         response = self.client.CreateAuthenticationChallenge(mock_stub_class())
 
         self.assertIsInstance(response, AuthenticationChallengeResponse)
+        # TODO: confirm actual values - see test_verify_authentication_corrects
         mock_stub_instance.CreateAuthenticationChallenge.assert_called_once()
 
     @patch("client.AuthStub")
     def test_verify_authentication_correct(self, mock_stub_class: MagicMock) -> None:
         self.client.user = "testuser"
-        self.client.user_data["testuser"] = {
-            "k": 123,
-            "x": 456,
-        }
+        self.client.user_data["testuser"] = ClientUserData(
+            user_name="testuser",
+            k=123,
+            x=456,
+        )
         self.client.q = 29
 
         mock_response = MagicMock()

@@ -8,7 +8,7 @@ import grpc
 from envyaml import EnvYAML
 from proto.zkp_auth_pb2 import AuthenticationChallengeRequest
 
-from server import AuthServicer  # type: ignore[import-not-found]
+from server import AuthServicer, ServerUserData
 
 
 class TestServerRegister(unittest.TestCase):
@@ -84,12 +84,21 @@ class TestServerRegister(unittest.TestCase):
         self.server.g = 2
         self.server.h = 5
 
+        self.server.user_data["testuser"] = ServerUserData(
+            user_name="testuser",
+            y1=774238805953695667,
+            y2=3058468420466158753,
+            c=42,
+            r1=2600753519832085216,
+            r2=2417243292234350294,
+        )
+
         request = AuthenticationChallengeRequest(user="testuser", r1=7, r2=14)
         response = self.server.CreateAuthenticationChallenge(request, MagicMock())
 
         self.assertEqual(response.c, 42)
         self.assertIn("testuser", self.server.user_data)
-        self.assertIn("c", self.server.user_data["testuser"])
+        self.assertEqual(self.server.user_data["testuser"].c, 42)
 
     @patch("server.ServicerContext")
     def test_verify_authentication_correct(self, mock_context: MagicMock) -> None:
@@ -97,13 +106,14 @@ class TestServerRegister(unittest.TestCase):
         self.server.h = 76
         self.server.p = 179
         self.server.user = "testuser"
-        self.server.user_data["testuser"] = {
-            "c": 11,
-            "y1": 82,
-            "y2": 66,
-            "r1": 124,
-            "r2": 142,
-        }
+        self.server.user_data["testuser"] = ServerUserData(
+            user_name="testuser",
+            c=11,
+            y1=82,
+            y2=66,
+            r1=124,
+            r2=142,
+        )
 
         request = MagicMock()
         request.s = 53
@@ -121,13 +131,14 @@ class TestServerRegister(unittest.TestCase):
         self.server.h = 76
         self.server.p = 179
         self.server.user = "testuser"
-        self.server.user_data["testuser"] = {
-            "c": 11,
-            "y1": 82,
-            "y2": 66,
-            "r1": 124,
-            "r2": 142,
-        }
+        self.server.user_data["testuser"] = ServerUserData(
+            user_name="testuser",
+            c=11,
+            y1=82,
+            y2=66,
+            r1=124,
+            r2=142,
+        )
 
         request = MagicMock()
         request.s = 1
@@ -147,15 +158,15 @@ class TestServerRegister(unittest.TestCase):
         self.server.p = 179
         self.server.q = 191
         self.server.user = "testuser"
-        self.server.user_data["testuser"] = {
-            "c": 11,
-            "y1": 82,
-            "y2": 66,
-            "r1": 125,
-            "r2": 143,
-            "k": 7,
-            "x": 10,
-        }
+        self.server.user_data["testuser"] = ServerUserData(
+            user_name=self.server.user,
+            c=11,
+            y1=82,
+            y2=66,
+            r1=125,
+            r2=143,
+            k=7,
+        )
 
         request = MagicMock()
         request.s = 10

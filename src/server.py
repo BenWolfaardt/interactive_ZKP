@@ -25,9 +25,9 @@ class ServerUserData(BaseModel):
     user_name: str
     y1: int
     y2: int
-    c: int
-    r1: int
-    r2: int
+    c: int = 0
+    r1: int | None = None
+    r2: int | None = None
 
 
 class AuthServicer(zkp_auth_pb2_grpc.AuthServicer):

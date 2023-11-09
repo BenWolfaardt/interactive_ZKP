@@ -33,16 +33,17 @@ class Settings(BaseModel):
     def __init__(self, **data: Any):
         yaml_config = EnvYAML("./config/local.yaml", strict=False)
 
-        super().__init__(
-            p=yaml_config["public_variables"]["p"],
-            q=yaml_config["public_variables"]["q"],
-            g=yaml_config["public_variables"]["g"],
-            h=yaml_config["public_variables"]["h"],
-            flavour=yaml_config["implementation"]["flavour"],
-            bits=yaml_config["implementation"]["bits"],
-            log_level=yaml_config["logging"]["level"],
-            **data,
-        )
+        data = {
+            "p": yaml_config["public_variables"]["p"],
+            "q": yaml_config["public_variables"]["q"],
+            "g": yaml_config["public_variables"]["g"],
+            "h": yaml_config["public_variables"]["h"],
+            "flavour": yaml_config["implementation"]["flavour"],
+            "bits": yaml_config["implementation"]["bits"],
+            "log_level": yaml_config["logging"]["level"],
+        }
+
+        super().__init__(**data)
 
     @field_validator("p", "q", "g", "h")
     def check_value_size(cls, value: int) -> int:

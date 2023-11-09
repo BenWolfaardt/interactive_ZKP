@@ -68,10 +68,12 @@ warn_unused_ignores = true
 
 [[tool.mypy.overrides]]
 module = [
+    "client.*",
     "envyaml.*",
     "google.*",
     "google.protobuf.*",
     "grpc.*",
     "pydantic.*",
+    "server.*",
 ]
 ignore_missing_imports = true
